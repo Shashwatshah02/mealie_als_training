@@ -14,7 +14,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY scripts/train.py /app/train.py
 
 ENV OPENBLAS_NUM_THREADS=1
-ENV MLFLOW_TRACKING_URI=http://129.114.26.176:30500
+ENV MLFLOW_TRACKING_URI=http://mlflow-service.platform.svc.cluster.local:5000
 ENV MLFLOW_S3_ENDPOINT_URL=http://minio-service.platform.svc.cluster.local:9000
 ENV AWS_ACCESS_KEY_ID=minioadmin
 ENV AWS_SECRET_ACCESS_KEY=minioadmin123
