@@ -1,0 +1,37 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: mealie-als-training-v2
+  namespace: training
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: training
+          image: shashwatshah02/mealie-als-training:latest
+          env:
+            - name: MLFLOW_TRACKING_URI
+              value: "http://mlflow-service.platform.svc.cluster.local:5000"
+            - name: MLFLOW_S3_ENDPOINT_URL
+              value: "http://minio-service.platform.svc.cluster.local:9000"
+            - name: AWS_ACCESS_KEY_ID
+              value: "minioadmin"
+            - name: AWS_SECRET_ACCESS_KEY
+              value: "minioadmin123"
+            - name: MINIO_ENDPOINT
+              value: "http://minio-service.platform.svc.cluster.local:9000"
+            - name: MINIO_ACCESS_KEY
+              value: "minioadmin"
+            - name: MINIO_SECRET_KEY
+              value: "minioadmin123"
+            - name: OPENBLAS_NUM_THREADS
+              value: "1"
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "250m"
+            limits:
+              memory: "2Gi"
+              cpu: "1"
+  backoffLimit: 2

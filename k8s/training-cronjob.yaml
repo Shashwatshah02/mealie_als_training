@@ -1,0 +1,40 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: mealie-als-training-cron
+  namespace: training
+spec:
+  schedule: "0 2 * * *"
+  jobTemplate:
+    spec:
+      backoffLimit: 2
+      template:
+        spec:
+          restartPolicy: Never
+          containers:
+            - name: training
+              image: shashwatshah02/mealie-als-training:latest
+              env:
+                - name: MLFLOW_TRACKING_URI
+                  value: "http://mlflow-service.platform.svc.cluster.local:5000"
+                - name: MLFLOW_S3_ENDPOINT_URL
+                  value: "http://minio-service.platform.svc.cluster.local:9000"
+                - name: AWS_ACCESS_KEY_ID
+                  value: "minioadmin"
+                - name: AWS_SECRET_ACCESS_KEY
+                  value: "minioadmin123"
+                - name: MINIO_ENDPOINT
+                  value: "http://minio-service.platform.svc.cluster.local:9000"
+                - name: MINIO_ACCESS_KEY
+                  value: "minioadmin"
+                - name: MINIO_SECRET_KEY
+                  value: "minioadmin123"
+                - name: OPENBLAS_NUM_THREADS
+                  value: "1"
+              resources:
+                requests:
+                  memory: "2Gi"
+                  cpu: "1"
+                limits:
+                  memory: "4Gi"
+                  cpu: "2"
